@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+    }
+
+    .calc-wrapper {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 25px;
+      width: 360px;
+      backdrop-filter: blur(10px);
+    }
+
+    .calc-display {
+      width: 100%;
+      padding: 18px;
+      font-size: 32px;
+      text-align: right;
+      border: none;
+      border-radius: 12px;
+      background: #f0f4ff;
+      margin-bottom: 20px;
+      box-shadow: inset 2px 2px 6px #d9e0f2, inset -2px -2px 6px #ffffff;
+      color: #1f2937;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .calc-btn {
+      padding: 18px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #e0ecff;
+      color: #1e3a8a;
+      box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1),
+                  -3px -3px 6px rgba(255, 255, 255, 0.7);
+      transition: transform 0.15s ease;
+    }
+
+    .calc-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .db {
+      grid-column: span 2;
+    }
+
+    .op-btn {
+      background: #93c5fd;
+      color: #0f172a;
+    }
+
+    .action-btn {
+      background: #fca5a5;
+      color: #fff;
+    }
+
+    .equals-btn {
+      background: #6ee7b7;
+      color: #065f46;
+    }
+  </style>
+</head>
+<body>
+  <div class="calc-wrapper">
+    <input type="text" id="display" class="calc-display" placeholder="0" readonly />
+
+    <div class="button-grid">
+      <button class="calc-btn action-btn db" id="btnClearAll">CE</button>
+      <button class="calc-btn action-btn" id="btnClearLast">C</button>
+      <button class="calc-btn op-btn" data-value="/">/</button>
+
+      <button class="calc-btn" data-value="7">7</button>
+      <button class="calc-btn" data-value="8">8</button>
+      <button class="calc-btn" data-value="9">9</button>
+      <button class="calc-btn op-btn" data-value=""></button>
+
+      <button class="calc-btn" data-value="4">4</button>
+      <button class="calc-btn" data-value="5">5</button>
+      <button class="calc-btn" data-value="6">6</button>
+      <button class="calc-btn op-btn" data-value="-">-</button>
+
+      <button class="calc-btn" data-value="1">1</button>
+      <button class="calc-btn" data-value="2">2</button>
+      <button class="calc-btn" data-value="3">3</button>
+      <button class="calc-btn op-btn" data-value="+">+</button>
+
+      <button class="calc-btn db" data-value="0">0</button>
+      <button class="calc-btn" data-value=".">.</button>
+      <button class="calc-btn equals-btn" id="btnEquals">=</button>
+    </div>
+  </div>
+
+  <script>
+    let result = document.querySelector("#display");
+    let btns = document.querySelectorAll("button.calc-btn");
+    let CE = document.querySelector("#btnClearAll");
+    let C = document.querySelector("#btnClearLast");
+    let output = document.querySelector("#btnEquals");
+
+    for (let i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function () {
+            if (this.id === "btnClearAll" || this.id === "btnClearLast" || this.id === "btnEquals") {
+                return;
+            }
+
+            let lastDigit = result.value.slice(-1);
+            let value = this.getAttribute("data-value") || this.textContent;
+
+            if (result.value === "" && ["+", "-", "*", "/"].includes(value)) {
+                return;
+            }
+
+            if (["+", "-", "", "/"].includes(lastDigit) && ["+", "-", "", "/"].includes(value)) {
+                return;
+            }
+
+            result.value += value;
+        });
+    }
+
+    CE.addEventListener("click", function () {
+        result.value = "";
+    });
+
+    C.addEventListener("click", function () {
+        result.value = result.value.slice(0, -1);
+    });
+    output.addEventListener("click", function () {
+    try {
+        result.value = eval(result.value) || "";
+    } catch {
+        result.value = "Error";
+    }
+});
+  </script>
+</body>
+</html>
